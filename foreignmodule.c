@@ -28,8 +28,8 @@ float** Power_matrix(float** matrix, int p, int len) {
     float** new_matrix = NULL;
     madeArr(len, &new_matrix);
 
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j < len; j++) {
             if (i == j)
                 new_matrix[i][j] = 1;
             else new_matrix[i][j] = 0;
@@ -37,22 +37,28 @@ float** Power_matrix(float** matrix, int p, int len) {
     }
 
     for (int k = 0; k < p; k++) {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
                 result_matrix[i][j] = 0;
-                for (int r = 0; r < 2; r++) {
+                for (int r = 0; r < len; r++) {
                     result_matrix[i][j] += (new_matrix[i][r] * matrix[r][j]);
                 }
             }
         }
 
-        for (int e = 0; e < 2; e++){
-            for (int w = 0; w < 2; w++)
+        for (int e = 0; e < len; e++){
+            for (int w = 0; w < len; w++)
             {
                 new_matrix[e][w] = result_matrix[e][w];
             }
         }
     }
+    for (int i = 0; i < len; i++) {
+        free(new_matrix[i]);
+        free(matrix[i]);
+    }
+    free(new_matrix);
+    free(matrix);
     return result_matrix;
 }
 
@@ -81,6 +87,11 @@ static PyObject *matrix_power(PyObject* self, PyObject* args) {
             PyList_SetItem(item, t, PyFloat_FromDouble(matrix[i][t]));
         }
     }
+
+    for (int i = 0; i < len; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
 
     return obj_list;
 }
