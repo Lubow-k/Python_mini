@@ -80,7 +80,8 @@ static PyObject *matrix_power(PyObject* self, PyObject* args) {
         }
     }
     matrix = Power_matrix(matrix, power, len);
-    
+    Py_INCREF(obj_list);
+
     for (int i = 0; i < len; i++) {
         PyObject* item = PyList_GetItem(obj_list, i);
         for (int t = 0; t < len; t++) {
